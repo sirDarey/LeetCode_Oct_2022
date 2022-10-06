@@ -10,26 +10,24 @@ package leetcodeOct2022;
 
 class Day1_91_DecodeWays {
     
-    public int[] sumEvenAfterQueries(int[] nums, int[][] queries) {
-        int n = nums.length,
-            sum = 0;
-        int [] result = new int[n];
+    public int numDecodings(String s) {
+        int prev1 = (s.charAt(0) == '0')? 0 : 1,
+            prev2 = 1,
+            current = prev1;
         
-        for (int i : nums) 
-            if (i%2 == 0)
-                sum += i;
-        
-        for (int i=0; i<n; i++) {
-            int val = queries[i][0], index = queries[i][1];
-            if (nums[index]%2 == 0) 
-                sum -= nums[index]; 
+        for (int i=2; i<=s.length(); i++) {
+            current = 0;
             
-            nums[index] += val;
+            if (s.charAt(i-1) != '0')
+                current += prev1;
             
-            if (nums[index]%2 == 0) 
-                sum += nums[index];
-            result[i] = sum;
+            if (s.charAt(i-2) == '1' || 
+                    (s.charAt(i-2) == '2' && s.charAt(i-1) < '7'))
+                current += prev2;
+            
+            prev2 = prev1;
+            prev1 = current;
         }
-        return result;
+        return current;
     }
 }
