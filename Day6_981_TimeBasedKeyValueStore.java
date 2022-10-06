@@ -1,47 +1,33 @@
 package leetcodeOct2022;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
+
 /**
  *
  * @Sir Darey
  * 
- * LeetCode Daily Challenge: October 2022, Day 4
- * Problem 112: Path Sum
+ * LeetCode Daily Challenge: October 2022, Day 6
+ * Problem 981: Time Based Key Value Store
  */
 
-class Day4_112_PathSum {
-    class TreeNode {
-        int val;
-        TreeNode left;
-        TreeNode right;
-        TreeNode() {}
-        TreeNode(int val) { this.val = val; }
-        TreeNode(int val, TreeNode left, TreeNode right) {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
+class Day6_981_TimeBasedKeyValueStore {
+    Map <String, TreeMap> timeMap;
+       
+    public Day6_981_TimeBasedKeyValueStore() {
+        timeMap = new HashMap<>();
     }
     
-    int targetSum;
-    
-    public boolean hasPathSum(TreeNode root, int targetSum) {
-        
-        this.targetSum = targetSum;
-        
-        if  (root == null)
-            return false;
-    
-        return recur (root, 0);     
+    public void set(String key, String value, int timestamp) {
+        timeMap.putIfAbsent(key,new TreeMap<>());
+        timeMap.get(key).put(timestamp, value);
     }
     
-    boolean recur (TreeNode root, int sum) {         
-        int currentSum = sum + root.val;
-        
-        if (root.left != null && recur(root.left, currentSum))
-            return true;
-        if (root.right != null && recur(root.right, currentSum))
-            return true;
-        
-        return (currentSum == targetSum && root.left==null && root.right == null);
+    public String get(String key, int timestamp) {
+        TreeMap<Integer,String> temp = timeMap.getOrDefault(key,null);
+        if(timeMap.get(key) == null || temp.floorKey(timestamp) == null)
+            return "";
+        return temp.get(temp.floorKey(timestamp));  
     }
 }

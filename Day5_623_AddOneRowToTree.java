@@ -4,11 +4,11 @@ package leetcodeOct2022;
  *
  * @Sir Darey
  * 
- * LeetCode Daily Challenge: October 2022, Day 4
- * Problem 112: Path Sum
+ * LeetCode Daily Challenge: October 2022, Day 5
+ * Problem 623: Add One Row to Tree
  */
 
-class Day4_112_PathSum {
+class Day5_623_AddOneRowToTree {
     class TreeNode {
         int val;
         TreeNode left;
@@ -22,26 +22,36 @@ class Day4_112_PathSum {
         }
     }
     
-    int targetSum;
-    
-    public boolean hasPathSum(TreeNode root, int targetSum) {
-        
-        this.targetSum = targetSum;
-        
-        if  (root == null)
-            return false;
-    
-        return recur (root, 0);     
+    int val; 
+    public TreeNode addOneRow(TreeNode root, int val, int depth) {
+        this.val = val;
+        return recur(root, depth);
     }
     
-    boolean recur (TreeNode root, int sum) {         
-        int currentSum = sum + root.val;
+    TreeNode recur (TreeNode root, int depth) {
         
-        if (root.left != null && recur(root.left, currentSum))
-            return true;
-        if (root.right != null && recur(root.right, currentSum))
-            return true;
+        if (depth == 0 || depth == 1) 
+            return add(val, root, depth);
         
-        return (currentSum == targetSum && root.left==null && root.right == null);
+        if (root != null) {
+            root.left = recur(root.left, (depth > 2)? depth - 1 : 1);
+            root.right = recur(root.right, (depth > 2)? depth - 1 : 0);
+        }
+        return root;
+    }
+    
+    TreeNode add(int val, TreeNode root, int depth) {
+        TreeNode newNode = new TreeNode(val);
+        if (depth == 1)
+            newNode.left = root;
+        else 
+            newNode.left = null;
+
+        if (depth == 0)
+            newNode.right = root;
+        else 
+            newNode.right = null;
+        
+        return newNode;
     }
 }
