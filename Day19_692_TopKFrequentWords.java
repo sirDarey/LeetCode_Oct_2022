@@ -1,10 +1,10 @@
 package leetcodeOct2022;
 
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.PriorityQueue;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  *
@@ -16,23 +16,52 @@ import java.util.PriorityQueue;
 
 class Day19_692_TopKFrequentWords {
     
-    public List<String> topKFrequent(String[] words, int k) {
-        Map <String, Integer> map = new HashMap<>();
-        for (String word : words)
-            map.put(word, map.getOrDefault(word, 0)+1);
+    private class Data <Num, Freq> {
+        private final int num;
+        private final int freq;
+
+        public Data (int num, int freq) {
+            this.num = num;
+            this.freq = freq;
+        }
+
+        public int getNum () {
+            return num;
+        }
+
+        public int getFreq () {
+            return freq;
+        }
+    }
+
+    public int[] topKFrequent(int[] nums, int k) {
+        Map <Integer, Integer> map = new HashMap<>();
+        for (int num : nums) 
+            map.put(num, map.getOrDefault(num, 0)+1);
         
-        PriorityQueue<Map.Entry<String, Integer>> pq = new PriorityQueue<>(
-                    (a,b) -> a.getValue().equals(b.getValue())? 
-                            a.getKey().compareTo(b.getKey()) : b.getValue() - a.getValue());
-        
-        map.entrySet().forEach(entry -> {
-            pq.add(entry);
+        Comparator <Data<Integer, Integer>> compareFreq = (Data<Integer, Integer> data1, Data<Integer, Integer> data2) -> {
+            if (data2.getFreq() > data1.getFreq())
+                return 1;
+            else
+                return -1;
+        };
+
+        Set <Data<Integer, Integer>> set = new TreeSet<>(compareFreq);
+
+        map.entrySet().forEach(x-> {
+            set.add(new Data(x.getKey(), x.getValue()));
         });
-        
-        List <String> list = new ArrayList<>();
-        for (int i=0; i<k; i++) 
-            list.add(pq.poll().getKey());
-        
-        return list;
+
+        int result [] = new int [k];
+        int i = 0;
+
+        for (Data <Integer, Integer> data : set) {
+            if (i == k)
+                break;
+            result[i] = data.getNum();
+            i++;
+        }
+
+        return result;
     }
 }
